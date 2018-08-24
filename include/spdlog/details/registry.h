@@ -63,7 +63,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         auto found = loggers_.find(logger_name);
-        return found == loggers_.end() ? nullptr : found->second;
+        return found == loggers_.end() ? nullptr : found->second.lock();
     }
 
     void set_tp(std::shared_ptr<thread_pool> tp)
@@ -85,7 +85,7 @@ public:
         formatter_ = std::move(formatter);
         for (auto &l : loggers_)
         {
-            l.second->set_formatter(formatter_->clone());
+            l.second.lock()->set_formatter(formatter_->clone());
         }
     }
 
@@ -94,7 +94,7 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second->set_level(log_level);
+            l.second.lock()->set_level(log_level);
         }
         level_ = log_level;
     }
@@ -104,7 +104,7 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second->flush_on(log_level);
+            l.second.lock()->flush_on(log_level);
         }
         flush_level_ = log_level;
     }
@@ -121,7 +121,7 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second->set_error_handler(handler);
+            l.second.lock()->set_error_handler(handler);
         }
         err_handler_ = handler;
     }
@@ -131,7 +131,7 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            fun(l.second);
+            fun(l.second.lock());
         }
     }
 
@@ -140,7 +140,7 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second->flush();
+            l.second.lock()->flush();
         }
     }
 
@@ -201,7 +201,7 @@ private:
 
     std::mutex logger_map_mutex_, flusher_mutex_;
     std::recursive_mutex tp_mutex_;
-    std::unordered_map<std::string, std::shared_ptr<logger>> loggers_;
+    std::unordered_map<std::string, std::weak_ptr<logger>> loggers_;
     std::unique_ptr<formatter> formatter_;
     level::level_enum level_ = level::info;
     level::level_enum flush_level_ = level::off;
