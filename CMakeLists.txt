@@ -4,7 +4,7 @@
 #
 
 cmake_minimum_required(VERSION 3.1)
-project(spdlog_couchbase VERSION 1.1.0 LANGUAGES CXX)
+project(spdlog VERSION 1.1.0 LANGUAGES CXX)
 include(CTest)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
@@ -39,7 +39,7 @@ include(cmake/sanitizers.cmake)
 #---------------------------------------------------------------------------------------
 # spdlog target
 #---------------------------------------------------------------------------------------
-add_library(spdlog_couchbase INTERFACE)
+add_library(spdlog INTERFACE)
 add_library(spdlog::spdlog ALIAS spdlog)
 
 option(SPDLOG_BUILD_EXAMPLES "Build examples" ON)
@@ -95,7 +95,7 @@ configure_file("cmake/spdlog.pc.in" "${pkg_config}" @ONLY)
 
 # install targets
 install(
-    TARGETS spdlog_couchbase
+    TARGETS spdlog
     EXPORT "${targets_export_name}"
 )
 
@@ -136,4 +136,4 @@ export(
 export(PACKAGE ${PROJECT_NAME})
 
 file(GLOB_RECURSE spdlog_include_SRCS "${HEADER_BASE}/*.h")
-add_custom_target(spdlog_couchbase_headers_for_ide SOURCES ${spdlog_include_SRCS})
+add_custom_target(spdlog_headers_for_ide SOURCES ${spdlog_include_SRCS})
