@@ -86,7 +86,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 shared->set_formatter(formatter_->clone());
             }
         }
@@ -98,7 +99,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 shared->set_level(log_level);
             }
         }
@@ -111,7 +113,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 shared->flush_on(log_level);
             }
         }
@@ -131,7 +134,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 shared->set_error_handler(handler);
             }
         }
@@ -144,7 +148,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 fun(shared);
             }
         }
@@ -156,7 +161,8 @@ public:
         for (auto &l : loggers_)
         {
             auto shared = l.second.lock();
-            if (shared) {
+            if (shared)
+            {
                 shared->flush();
             }
         }
