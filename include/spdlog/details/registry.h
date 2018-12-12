@@ -85,7 +85,10 @@ public:
         formatter_ = std::move(formatter);
         for (auto &l : loggers_)
         {
-            l.second.lock()->set_formatter(formatter_->clone());
+            auto shared = l.second.lock();
+            if (shared) {
+                shared->set_formatter(formatter_->clone());
+            }
         }
     }
 
@@ -94,7 +97,10 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second.lock()->set_level(log_level);
+            auto shared = l.second.lock();
+            if (shared) {
+                shared->set_level(log_level);
+            }
         }
         level_ = log_level;
     }
@@ -104,7 +110,10 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second.lock()->flush_on(log_level);
+            auto shared = l.second.lock();
+            if (shared) {
+                shared->flush_on(log_level);
+            }
         }
         flush_level_ = log_level;
     }
@@ -121,7 +130,10 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second.lock()->set_error_handler(handler);
+            auto shared = l.second.lock();
+            if (shared) {
+                shared->set_error_handler(handler);
+            }
         }
         err_handler_ = handler;
     }
@@ -131,7 +143,10 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            fun(l.second.lock());
+            auto shared = l.second.lock();
+            if (shared) {
+                fun(shared);
+            }
         }
     }
 
@@ -140,7 +155,10 @@ public:
         std::lock_guard<std::mutex> lock(logger_map_mutex_);
         for (auto &l : loggers_)
         {
-            l.second.lock()->flush();
+            auto shared = l.second.lock();
+            if (shared) {
+                shared->flush();
+            }
         }
     }
 
