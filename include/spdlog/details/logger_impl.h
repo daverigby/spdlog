@@ -60,9 +60,13 @@ inline void spdlog::logger::log(level::level_enum lvl, const char *fmt, const Ar
 
     try
     {
-        details::log_msg log_msg(&name_, lvl);
-        fmt::format_to(log_msg.raw, fmt, args...);
-        sink_it_(log_msg);
+        before_sink_it_();
+        {
+            details::log_msg log_msg(&name_, lvl);
+            fmt::format_to(log_msg.raw, fmt, args...);
+            sink_it_(log_msg);
+        }
+        after_sink_it_();
     }
     SPDLOG_CATCH_AND_HANDLE
 }
@@ -282,6 +286,12 @@ inline spdlog::level::level_enum spdlog::logger::level() const
 inline bool spdlog::logger::should_log(spdlog::level::level_enum msg_level) const
 {
     return msg_level >= level_.load(std::memory_order_relaxed);
+}
+
+inline void spdlog::logger::after_sink_it_() {
+}
+
+inline void spdlog::logger::before_sink_it_() {
 }
 
 //

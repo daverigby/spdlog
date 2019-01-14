@@ -131,7 +131,9 @@ public:
     log_err_handler error_handler();
 
 protected:
+    virtual void before_sink_it_();
     virtual void sink_it_(details::log_msg &msg);
+    virtual void after_sink_it_();
     virtual void flush_();
 
     bool should_flush_(const details::log_msg &msg);
